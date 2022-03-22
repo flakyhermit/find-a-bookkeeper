@@ -6,4 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return "Hello world!"
+    return {
+        "title": "Find a Bookkeeper",
+        "description": "A contact list for bookkeepers."
+    }
