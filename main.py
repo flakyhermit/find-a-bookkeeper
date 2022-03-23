@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(title="Find a bookkeeper API")
 
 class Bookkeeper():
     id: int
