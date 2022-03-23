@@ -31,11 +31,11 @@ async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
     return DATA[skip: skip + limit]
 
 @app.get("/bookkeepers/search")
-async def search_bookkeepers(keyword: str | None = None) -> list[dict]:
+async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
     if keyword is not None:
         result = [entry for entry in DATA if keyword in entry["name"]]
-        return result
-    return DATA
+        return result[:limit]
+    return DATA[:limit]
 
 @app.get("/bookkeepers/{bookkeeper_id}")
 async def read_bookkeeper(bookkeeper_id: int) -> dict:
