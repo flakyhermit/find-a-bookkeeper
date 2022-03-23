@@ -28,8 +28,7 @@ DATA = [
 
 @app.get("/bookkeepers/")
 async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
-    # Return only limit number of parameters
-    return DATA
+    return DATA[skip: skip + limit]
 
 @app.get("/bookkeepers/{bookkeeper_id}")
 async def read_bookkeeper(bookkeeper_id: int) -> dict:
