@@ -26,9 +26,15 @@ DATA = [
     }
 ]
 
-@app.get("/bookkeepers/")
+@app.get("/bookkeepers")
 async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
     return DATA[skip: skip + limit]
+
+@app.get("/bookkeepers/search")
+async def search_bookkeepers(keyword: str) -> list[dict]:
+    result = [entry for entry in DATA if keyword in entry["name"]]
+    print(result)
+    return result
 
 @app.get("/bookkeepers/{bookkeeper_id}")
 async def read_bookkeeper(bookkeeper_id: int) -> dict:
@@ -37,3 +43,4 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
         return result[0]
     else:
         return { "message": "id not found in db" }
+
