@@ -9,7 +9,7 @@ def read_root():
     return { "title": "Find a Bookkeeper", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
 
 @app.get("/bookkeepers/")
-def read_bookkeepers(limit: int = 20):
+def read_bookkeepers(skip: int = 0, limit: int = 20):
     # Return only limit number of parameters
     return { "name": "Jewel James" }
 
