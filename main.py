@@ -18,6 +18,10 @@ class Bookkeeper(BaseModel):
 class BookkeeperSearchResult(BaseModel):
     results: list[Bookkeeper]
 
+class BookkeeperCreate(BaseModel):
+    name: str
+    bio: str
+
 
 DATA = [
     {
@@ -56,3 +60,12 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
     else:
         return { "message": "id not found in db" }
 
+@app.post("/bookkeepers/")
+async def create_bookkeeper(recipe_in: BookkeeperCreate):
+    bookkeeper = Bookkeeper(
+        id = len(DATA) + 1,
+        name = recipe_in.name,
+        bio = recipe_in.bio
+    )
+    DATA.append(bookkeeper)
+    return { "message": "Bookkeeeper added", "result": bookkeeper }
