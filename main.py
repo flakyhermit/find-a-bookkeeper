@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI(title="Find a bookkeeper API")
@@ -58,7 +58,10 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
     if result:
         return result[0]
     else:
-        return { "message": "id not found in db" }
+        raise HTTPException(
+            status_code = 404,
+            detail = f"There's no item with id: {bookkeeper_id}"
+        )
 
 @app.post("/bookkeepers/")
 async def create_bookkeeper(recipe_in: BookkeeperCreate):
