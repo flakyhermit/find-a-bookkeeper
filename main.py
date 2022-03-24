@@ -15,6 +15,10 @@ class Bookkeeper(BaseModel):
     name: str
     bio: str
 
+class BookkeeperSearchResult(BaseModel):
+    results: list[Bookkeeper]
+
+
 DATA = [
     {
         "id": 1,
@@ -33,16 +37,16 @@ DATA = [
     }
 ]
 
-@app.get("/bookkeepers")
+@app.get("/bookkeepers", response_model = BookkeeperSearchResult)
 async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
-    return DATA[skip: skip + limit]
+    return { "results" : DATA[skip: skip + limit] }
 
-@app.get("/bookkeepers/search")
+@app.get("/bookkeepers/search", response_model = BookkeeperSearchResult)
 async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
     if keyword is not None:
         result = [entry for entry in DATA if keyword in entry["name"].lower()]
-        return result[:limit]
-    return DATA[:limit]
+        return { "results": result[:limit] }
+    return { "results" : DATA[:limit] }
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int) -> dict:
