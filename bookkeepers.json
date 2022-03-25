@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Martin Thomas",
+    "bio": "The founder of Weekend Bookkeeper, himself a weekend bookkeeper."
+  },
+  {
+    "id": 2,
+    "name": "Jewel James",
+    "bio": "The lead developer of Weekend Bookkeeper, and its chief economic adviser."
+  },
+  {
+    "id": 3,
+    "name": "Breezy",
+    "bio": "The Weekend Bookkeeper pet robot."
+  }
+]

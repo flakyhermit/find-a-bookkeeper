@@ -23,23 +23,10 @@ class BookkeeperCreate(BaseModel):
     bio: str
 
 
-DATA = [
-    {
-        "id": 1,
-        "name": "Martin Thomas",
-        "bio": "The founder of Weekend Bookkeeper, himself a weekend bookkeeper."
-    },
-    {
-        "id": 2,
-        "name": "Jewel James",
-        "bio": "The lead developer of Weekend Bookkeeper, and its chief economic adviser."
-    },
-    {
-        "id": 3,
-        "name": "Breezy",
-        "bio": "The Weekend Bookkeeper pet robot."
-    }
-]
+DATA = []
+with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
+    from json import load
+    data = load(f)
 
 @app.get("/bookkeepers", response_model = BookkeeperSearchResult)
 async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
