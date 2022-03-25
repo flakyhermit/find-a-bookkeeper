@@ -46,5 +46,5 @@ async def create_bookkeeper(recipe_in: BookkeeperCreate):
         name = recipe_in.name,
         bio = recipe_in.bio
     )
-    db.cr_bookkeeper(bookkeeper.id, bookkeeper.name, bookkeeper.bio)
+    db.cr_bookkeeper(bookkeeper.name, bookkeeper.bio)
     return { "message": "Bookkeeeper added", "result": bookkeeper }

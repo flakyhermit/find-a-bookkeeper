@@ -26,9 +26,9 @@ def read_bookkeepers():
         results = conn.execute(stmt).all()
         return results
 
-def cr_bookkeeper(id, name, bio):
+def cr_bookkeeper(name, bio):
     with engine.begin() as conn:
-        stmt = bookkeeper_table.insert().values(id = id, name = name, bio = bio)
+        stmt = bookkeeper_table.insert().values(name = name, bio = bio)
         conn.execute(stmt)
 
 def get_max_id():
