@@ -1,27 +1,15 @@
 #!/usr/bin/env python3
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+
+from schema import Bookkeeper, BookkeeperSearchResult, BookkeeperCreate
+import db
 
 app = FastAPI(title="Find a bookkeeper API")
 
 @app.get("/")
 async def read_root():
     return { "title": "Find a Bookkeeper API", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
-
-class Bookkeeper(BaseModel):
-    """ The model for a bookkeeper """
-    id: int
-    name: str
-    bio: str
-
-class BookkeeperSearchResult(BaseModel):
-    results: list[Bookkeeper]
-
-class BookkeeperCreate(BaseModel):
-    name: str
-    bio: str
-
 
 DATA = []
 with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
@@ -30,7 +18,8 @@ with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
 
 @app.get("/bookkeepers", response_model = BookkeeperSearchResult)
 async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
-    return { "results" : DATA[skip: skip + limit] }
+    d = db.read_bookkeepers()
+    return { "results" : d[skip: skip + limit] }
 
 @app.get("/bookkeepers/search", response_model = BookkeeperSearchResult)
 async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
@@ -44,18 +33,18 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
     result = [bookkeeper for bookkeeper in DATA if bookkeeper["id"] == bookkeeper_id]
     if result:
         return result[0]
-    else:
-        raise HTTPException(
-            status_code = 404,
-            detail = f"There's no item with id: {bookkeeper_id}"
-        )
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {bookkeeper_id}"
+    )
 
 @app.post("/bookkeepers/")
 async def create_bookkeeper(recipe_in: BookkeeperCreate):
+    max_bookkeeper_id = db.get_max_id()
     bookkeeper = Bookkeeper(
-        id = len(DATA) + 1,
+        id = max_bookkeeper_id + 1,
         name = recipe_in.name,
         bio = recipe_in.bio
     )
-    DATA.append(bookkeeper)
+    db.cr_bookkeeper(bookkeeper.id, bookkeeper.name, bookkeeper.bio)
     return { "message": "Bookkeeeper added", "result": bookkeeper }

@@ -2,16 +2,43 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import MetaData, Table
 
-connection = create_engine("sqlite://some.db", future = True)
+from sqlalchemy import select, func
 
-# declarative base class
-Base = declarative_base()
+engine = create_engine("sqlite:///db.db", future = True)
+metadata = MetaData()
 
-class Bookkeeper(Base):
-    __tablename__ = 'bookkeeper'
+bookkeeper_table = Table(
+    'bookkeepers',
+    metadata,
+    Column("id", Integer, primary_key = True),
+    Column("name", String(50)),
+    Column("bio", String(200))
+)
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    bio = Column(String)
+with engine.begin() as conn:
+    metadata.create_all(conn)
+
+def read_bookkeepers():
+    with engine.begin() as conn:
+        stmt = select(bookkeeper_table)
+        results = conn.execute(stmt).all()
+        return results
+
+def cr_bookkeeper(id, name, bio):
+    with engine.begin() as conn:
+        stmt = bookkeeper_table.insert().values(id = id, name = name, bio = bio)
+        conn.execute(stmt)
+
+def get_max_id():
+    with engine.begin() as conn:
+        stmt = select([func.max(bookkeeper_table.c.id)])
+        result = conn.execute(stmt)
+        result = result.one()
+        return result[0]
+
+def initialize():
+    with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
+        from json import load
+        data = load(f)
