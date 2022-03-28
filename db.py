@@ -28,6 +28,7 @@ service_table = Table(
 with engine.begin() as conn:
     metadata.create_all(conn)
 
+# Bookkeepers
 def _read_table_all(table: Table):
     with engine.begin() as conn:
         stmt = select(table)
@@ -61,8 +62,7 @@ def initialize():
         data = load(f)
 
 
-# SERVICES
-#
+# Services
 def read_services():
     return _read_table_all(service_table)
 
