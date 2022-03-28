@@ -34,9 +34,9 @@ async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> lis
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int) -> dict:
-    result = [bookkeeper for bookkeeper in DATA if bookkeeper["id"] == bookkeeper_id]
+    result = db.read_bookkeeper(bookkeeper_id)
     if result:
-        return result[0]
+        return result
     raise HTTPException(
         status_code = 404,
         detail = f"There's no item with id: {bookkeeper_id}"

@@ -35,8 +35,20 @@ def _read_table_all(table: Table):
         results = conn.execute(stmt).all()
         return results
 
+def _read_entry_by_columnname(table: Table, columnname: str, value: int):
+    with engine.begin() as conn:
+        stmt = select(table).where(table.c[columnname] == value)
+        try:
+            result = conn.execute(stmt).one()
+            return result
+        except NoResultFound:
+            return False
+
 def read_bookkeepers():
     return _read_table_all(bookkeeper_table)
+
+def read_bookkeeper(id: int):
+    return _read_entry_by_columnname(bookkeeper_table, "id", id)
 
 def search_bookkeeper_by_name(keyword: str):
     with engine.begin() as conn:
