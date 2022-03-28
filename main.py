@@ -23,10 +23,13 @@ async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
 
 @app.get("/bookkeepers/search", response_model = BookkeeperSearchResult)
 async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
+    print(keyword)
     if keyword is not None:
-        result = [entry for entry in DATA if keyword.lower() in entry["name"].lower()]
+        result = db.search_bookkeeper_by_name(keyword)
+        print(result)
         return { "results": result[:limit] }
-    return { "results" : DATA[:limit] }
+    d = db.read_bookkeepers()
+    return { "results" : d[:limit] }
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int) -> dict:

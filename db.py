@@ -26,6 +26,12 @@ def read_bookkeepers():
         results = conn.execute(stmt).all()
         return results
 
+def search_bookkeeper_by_name(keyword: str):
+    with engine.begin() as conn:
+        stmt = select(bookkeeper_table).where(bookkeeper_table.c.name.like(f'%{keyword}%'))
+        results = conn.execute(stmt).all()
+        return results
+
 def cr_bookkeeper(name, bio):
     with engine.begin() as conn:
         stmt = bookkeeper_table.insert().values(name = name, bio = bio)
