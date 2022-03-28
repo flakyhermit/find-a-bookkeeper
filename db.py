@@ -29,13 +29,13 @@ with engine.begin() as conn:
     metadata.create_all(conn)
 
 # Bookkeepers
-def _read_table_all(table: Table):
+def _read_all(table: Table):
     with engine.begin() as conn:
         stmt = select(table)
         results = conn.execute(stmt).all()
         return results
 
-def _read_entry_by_columnname(table: Table, columnname: str, value: int):
+def _read_by_columnname(table: Table, columnname: str, value: int | str):
     with engine.begin() as conn:
         stmt = select(table).where(table.c[columnname] == value)
         try:
@@ -45,10 +45,10 @@ def _read_entry_by_columnname(table: Table, columnname: str, value: int):
             return False
 
 def read_bookkeepers():
-    return _read_table_all(bookkeeper_table)
+    return _read_all(bookkeeper_table)
 
 def read_bookkeeper(id: int):
-    return _read_entry_by_columnname(bookkeeper_table, "id", id)
+    return _read_by_columnname(bookkeeper_table, "id", id)
 
 def search_bookkeeper_by_name(keyword: str):
     with engine.begin() as conn:

@@ -12,7 +12,6 @@ app = FastAPI(title="Find a bookkeeper API")
 async def read_root():
     return { "title": "Find a Bookkeeper API", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
 
-DATA = []
 with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
     from json import load
     data = load(f)
