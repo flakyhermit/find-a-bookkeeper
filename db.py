@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import MetaData, Table
 
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy import select, func
 
 engine = create_engine("sqlite:///db.db", future = True)
@@ -67,11 +68,12 @@ def read_services():
 
 def check_exits_service(name: str):
     with engine.begin() as conn:
-        stmt = select(service_table).where(select_table.c.name == name)
-        result = conn.execute(stmt).one()
-        if result:
-            return result[0]
-        return False
+        stmt = select(service_table).where(service_table.c.name == name)
+        try:
+            result = conn.execute(stmt).one()
+            return result
+        except NoResultFound:
+            return False
 
 def create_service(name):
     with engine.begin() as conn:
