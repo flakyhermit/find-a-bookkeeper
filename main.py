@@ -42,14 +42,8 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
     )
 
 @app.post("/bookkeepers/")
-async def create_bookkeeper(recipe_in: BookkeeperCreate):
-    max_bookkeeper_id = db.get_max_id()
-    bookkeeper = Bookkeeper(
-        id = max_bookkeeper_id + 1,
-        name = recipe_in.name,
-        bio = recipe_in.bio
-    )
-    db.cr_bookkeeper(bookkeeper.name, bookkeeper.bio)
+async def create_bookkeeper(bookkeeper_in: BookkeeperCreate):
+    db.cr_bookkeeper(bookkeeper_in.name, bookkeeper_in.bio)
     return { "message": "Bookkeeeper added", "result": bookkeeper }
 
 # Services
@@ -59,12 +53,11 @@ async def read_services(skip: int = 0, limit: int = 20) -> list[dict]:
     return { "results" : d[skip: skip + limit] }
 
 @app.post("/services/")
-async def create_service(recipe_in: ServiceCreate):
-    service_result = db.check_exits_service(recipe_in.name.lower())
-    print(service_result)
+async def create_service(service_in: ServiceCreate):
+    service_result = db.check_exits_service(service_in.name.lower())
     if service_result:
         return { "message": "Service already exits", "result": service_result }
-    service_result = db.create_service(recipe_in.name.lower())
+    service_result = db.create_service(service_in.name.lower())
     return { "message": "Service added", "result": service_result }
 
 @app.delete("/services/")
