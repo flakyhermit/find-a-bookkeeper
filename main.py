@@ -32,7 +32,7 @@ async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> lis
     return { "results" : d[:limit] }
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = Bookkeeper)
-async def read_bookkeeper(bookkeeper_id: int) -> dict:
+async def read_bookkeeper(bookkeeper_id: int) -> dict[Bookkeeper]:
     result = db.read_bookkeeper(bookkeeper_id)
     if result:
         return result
@@ -51,6 +51,16 @@ async def create_bookkeeper(bookkeeper_in: BookkeeperCreate):
 async def read_services(skip: int = 0, limit: int = 20) -> list[dict]:
     d = db.read_services()
     return { "results" : d[skip: skip + limit] }
+
+@app.get("/services/{service_id}", response_model = Service)
+async def read_service(service_id: int) -> dict[Service]:
+    result = db.read_service(service_id)
+    if result:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {service_id}"
+    )
 
 @app.post("/services/")
 async def create_service(service_in: ServiceCreate):

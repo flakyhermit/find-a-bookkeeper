@@ -76,7 +76,10 @@ def initialize():
 
 # Services
 def read_services():
-    return _read_table_all(service_table)
+    return _read_all(service_table)
+
+def read_service(id: int):
+    return _read_by_columnname(service_table, "id", id)
 
 def check_exits_service(name: str):
     with engine.begin() as conn:
