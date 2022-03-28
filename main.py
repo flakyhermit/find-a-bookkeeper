@@ -7,6 +7,7 @@ import db
 
 app = FastAPI(title="Find a bookkeeper API")
 
+# Bookkeepers
 @app.get("/")
 async def read_root():
     return { "title": "Find a Bookkeeper API", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
