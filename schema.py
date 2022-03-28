@@ -22,3 +22,6 @@ class Service(BaseModel):
 
 class ServicesSearchResult(BaseModel):
     results: list[Service]
+
+class ServiceCreate(BaseModel):
+    name: str

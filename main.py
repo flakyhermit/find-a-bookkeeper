@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, HTTPException
 
-from schema import Bookkeeper, BookkeeperSearchResult, BookkeeperCreate
+from schema import *
 import db
 
 app = FastAPI(title="Find a bookkeeper API")
@@ -53,8 +53,21 @@ async def create_bookkeeper(recipe_in: BookkeeperCreate):
     return { "message": "Bookkeeeper added", "result": bookkeeper }
 
 # Services
-
 @app.get("/services", response_model = ServicesSearchResult)
 async def read_services(skip: int = 0, limit: int = 20) -> list[dict]:
     d = db.read_services()
     return { "results" : d[skip: skip + limit] }
+
+@app.post("/services/")
+async def create_service(recipe_in: ServiceCreate):
+    service_result = db.check_exits_service(recipe_in.name.lower())
+    print(service_result)
+    if service_result:
+        return { "message": "Service already exits", "result": service_result }
+    db.create_service(recipe_in.name.lower())
+    return { "message": "Service added", "result": recipe_in }
+
+@app.delete("/services/")
+async def delete_service(service: str):
+    db.delete_service(service)
+    return { "message": "DONE" }

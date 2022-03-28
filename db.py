@@ -17,14 +17,24 @@ bookkeeper_table = Table(
     Column("bio", String(200))
 )
 
+service_table = Table(
+    'services',
+    metadata,
+    Column("id", Integer, primary_key = True),
+    Column("name", String(50))
+)
+
 with engine.begin() as conn:
     metadata.create_all(conn)
 
-def read_bookkeepers():
+def _read_table_all(table: Table):
     with engine.begin() as conn:
-        stmt = select(bookkeeper_table)
+        stmt = select(table)
         results = conn.execute(stmt).all()
         return results
+
+def read_bookkeepers():
+    return _read_table_all(bookkeeper_table)
 
 def search_bookkeeper_by_name(keyword: str):
     with engine.begin() as conn:
@@ -53,4 +63,22 @@ def initialize():
 # SERVICES
 #
 def read_services():
-    return _read_table_all(services_table)
+    return _read_table_all(service_table)
+
+def check_exits_service(name: str):
+    with engine.begin() as conn:
+        stmt = select(service_table.c.name == name)
+        result = conn.execute(stmt).one()
+        if result:
+            return result[0]
+        return False
+
+def create_service(name):
+    with engine.begin() as conn:
+        stmt = service_table.insert().values(name = name)
+        conn.execute(stmt)
+
+def delete_service(name):
+    with engine.begin() as conn:
+        stmt = service_table.delete().where(service_table.c.name == name)
+        conn.execute(stmt)
