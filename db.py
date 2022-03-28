@@ -43,7 +43,7 @@ def search_bookkeeper_by_name(keyword: str):
         results = conn.execute(stmt).all()
         return results
 
-def cr_bookkeeper(name, bio):
+def create_bookkeeper(name, bio):
     with engine.begin() as conn:
         stmt = bookkeeper_table.insert().values(name = name, bio = bio)
         conn.execute(stmt)

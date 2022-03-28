@@ -44,7 +44,7 @@ async def read_bookkeeper(bookkeeper_id: int) -> dict:
 
 @app.post("/bookkeepers/")
 async def create_bookkeeper(bookkeeper_in: BookkeeperCreate):
-    db.cr_bookkeeper(bookkeeper_in.name, bookkeeper_in.bio)
+    db.create_bookkeeper(bookkeeper_in.name, bookkeeper_in.bio)
     return { "message": "Bookkeeeper added", "result": bookkeeper }
 
 # Services
