@@ -67,7 +67,7 @@ def read_services():
 
 def check_exits_service(name: str):
     with engine.begin() as conn:
-        stmt = select(service_table.c.name == name)
+        stmt = select(service_table).where(select_table.c.name == name)
         result = conn.execute(stmt).one()
         if result:
             return result[0]
@@ -77,6 +77,9 @@ def create_service(name):
     with engine.begin() as conn:
         stmt = service_table.insert().values(name = name)
         conn.execute(stmt)
+        stmt = select(service_table).where(service_table.c.name == name)
+        result = conn.execute(stmt).one()
+        return result
 
 def delete_service(name):
     with engine.begin() as conn:

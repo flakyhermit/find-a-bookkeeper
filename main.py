@@ -64,8 +64,8 @@ async def create_service(recipe_in: ServiceCreate):
     print(service_result)
     if service_result:
         return { "message": "Service already exits", "result": service_result }
-    db.create_service(recipe_in.name.lower())
-    return { "message": "Service added", "result": recipe_in }
+    service_result = db.create_service(recipe_in.name.lower())
+    return { "message": "Service added", "result": service_result }
 
 @app.delete("/services/")
 async def delete_service(service: str):
