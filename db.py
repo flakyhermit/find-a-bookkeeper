@@ -48,3 +48,9 @@ def initialize():
     with open('./bookkeepers.json', 'r', encoding = 'utf-8') as f:
         from json import load
         data = load(f)
+
+
+# SERVICES
+#
+def read_services():
+    return _read_table_all(services_table)

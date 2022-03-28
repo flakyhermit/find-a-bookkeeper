@@ -14,3 +14,11 @@ class BookkeeperSearchResult(BaseModel):
 class BookkeeperCreate(BaseModel):
     name: str
     bio: str
+
+class Service(BaseModel):
+    """ The model for a service """
+    id: int
+    name: str
+
+class ServicesSearchResult(BaseModel):
+    results: list[Service]

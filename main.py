@@ -51,3 +51,10 @@ async def create_bookkeeper(recipe_in: BookkeeperCreate):
     )
     db.cr_bookkeeper(bookkeeper.name, bookkeeper.bio)
     return { "message": "Bookkeeeper added", "result": bookkeeper }
+
+# Services
+
+@app.get("/services", response_model = ServicesSearchResult)
+async def read_services(skip: int = 0, limit: int = 20) -> list[dict]:
+    d = db.read_services()
+    return { "results" : d[skip: skip + limit] }
