@@ -48,11 +48,11 @@ class CRUDBase(Generic[ModelType, SchemaType]):
             db.refresh(res)
         return res
 
-class CRUDBookkeepers(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate]):
+class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate]):
     def get_by_name(self, db: Session, search: str, skip: int, limit: int):
         result = db.query(self.model).filter(
             self.model.name.like(f'%{search}%')
         ).offset(skip).limit(limit).all()
         return result
 
-bookkeeper = CRUDBookkeepers(models.Bookkeeper, schemas.BookkeeperCreate)
+bookkeeper = CRUDBookkeeper(models.Bookkeeper, schemas.BookkeeperCreate)
