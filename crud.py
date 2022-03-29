@@ -14,5 +14,5 @@ def get_bookkeeper_by_id(db: Session, id: int):
 def search_bookkeepers_by_name(db: Session, search: str, skip: int, limit: int):
     result = db.query(models.Bookkeeper).filter(
         models.Bookkeeper.name.like(f'%{search}%')
-    ).all()
+    ).offset(skip).limit(limit).all()
     return result
