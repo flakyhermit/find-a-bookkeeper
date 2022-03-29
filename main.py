@@ -38,6 +38,16 @@ async def read_bookkeeper(bookkeeper_id: int):
 async def create_bookkeeper(bookkeeper_in: schema.BookkeeperCreate):
     return crud.create_bookkeeper(db, bookkeeper_in)
 
+@app.delete("/bookkeepers/{bookkeeper_id}")
+async def delete_bookkeeper(bookkeeper_id: int):
+    result = crud.delete_bookkeeper(db, bookkeeper_id)
+    if result:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {bookkeeper_id}"
+    )
+
 
 # # Services
 # @app.get("/services", response_model = ServicesSearchResult)

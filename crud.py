@@ -23,3 +23,11 @@ def create_bookkeeper(db: Session, item: schema.BookkeeperCreate):
     db.commit()
     db.refresh(bookkeeper)
     return bookkeeper
+
+def delete_bookkeeper(db: Session, id: int):
+    bookkeeper = db.query(models.Bookkeeper).get(id)
+    if bookkeeper is not None:
+        db.delete(bookkeeper)
+        db.commit()
+        return bookkeeper
+    return False
