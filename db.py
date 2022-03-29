@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from sqlalchemy import declarative_base
-from sqlalchemy import create_engine, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
 
@@ -13,4 +13,4 @@ engine = create_engine(
     connect_args={ "check_same_thread": False }
 )
 
-SessionLocal = sessionmaker(autocommit = False, autoflush = false, bind = engine)
+SessionLocal = sessionmaker(autocommit = False, autoflush = False, bind = engine)
