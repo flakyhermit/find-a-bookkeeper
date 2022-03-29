@@ -3,13 +3,18 @@
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
+from typing import Generic, TypeVar
+
 from db import Base
 
 import models
 import schemas
 
-class CRUDBase():
-    def __init__(self, model: Base, schema: BaseModel):
+ModelType = TypeVar("ModelType", bound=Base)
+SchemaType = TypeVar("SchemaType", bound=BaseModel)
+
+class CRUDBase(Generic[ModelType, SchemaType]):
+    def __init__(self, model: ModelType, schema: SchemaType):
         self.model = model
         self.schema = schema
 
@@ -20,7 +25,7 @@ class CRUDBase():
         result = db.query(self.model).filter(self.model.id == id).first()
         return result
 
-    def create(self, db: Session, item: BaseModel):
+    def create(self, db: Session, item: SchemaType):
         res = self.model(name = item.name, bio = item.bio)
         db.add(res)
         db.commit()
@@ -34,7 +39,7 @@ class CRUDBase():
             db.commit()
         return res
 
-    def update(self, db: Session, id: int, item: BaseModel):
+    def update(self, db: Session, id: int, item: SchemaType):
         res = db.query(self.model).get(id)
         if res is not None:
             res.name = item.name
