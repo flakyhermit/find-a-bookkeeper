@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sqlalchemy import Session
+from sqlalchemy.orm import Session
 
 import models
 
