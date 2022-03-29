@@ -16,3 +16,10 @@ def search_bookkeepers_by_name(db: Session, search: str, skip: int, limit: int):
         models.Bookkeeper.name.like(f'%{search}%')
     ).offset(skip).limit(limit).all()
     return result
+
+def create_bookkeeper(db: Session, item: schema.BookkeeperCreate):
+    bookkeeper = models.Bookkeeper(name = item.name, bio = item.bio)
+    db.add(bookkeeper)
+    db.commit()
+    db.refresh(bookkeeper)
+    return bookkeeper
