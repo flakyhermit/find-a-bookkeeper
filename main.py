@@ -14,10 +14,10 @@ db = SessionLocal()
 async def read_root():
     return { "title": "Find a Bookkeeper API", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
 
-@app.get("/bookkeepers", response_model = schema.BookkeeperSearchResult)
-async def read_bookkeepers(skip: int = 0, limit: int = 20) -> list[dict]:
+@app.get("/bookkeepers", response_model = list[schema.Bookkeeper])
+async def read_bookkeepers(skip: int = 0, limit: int = 20):
     bookkeepers = crud.read_bookkeepers(db, skip, limit)
-    return { "results" : bookkeepers }
+    return bookkeepers
 
 # @app.get("/bookkeepers/search", response_model = BookkeeperSearchResult)
 # async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
