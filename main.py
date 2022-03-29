@@ -20,9 +20,9 @@ async def read_root():
 @app.get("/bookkeepers", response_model = list[schemas.Bookkeeper])
 async def read_bookkeepers(skip: int = 0, limit: int = 20, search: str = None):
     if search is not None:
-        bookkeepers = crud.search_bookkeepers_by_name(db, search, skip, limit)
+        bookkeepers = crud.bookkeeper.get_by_name(db, search, skip, limit)
         return bookkeepers
-    return crud.get_bookkeepers(db, skip, limit)
+    return crud.bookkeeper.get_all(db, skip, limit)
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = schemas.Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int):
