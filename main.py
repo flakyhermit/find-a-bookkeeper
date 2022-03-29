@@ -19,6 +19,16 @@ async def read_bookkeepers(skip: int = 0, limit: int = 20):
     bookkeepers = crud.read_bookkeepers(db, skip, limit)
     return bookkeepers
 
+@app.get("/bookkeepers/{bookkeeper_id}", response_model = schema.Bookkeeper)
+async def read_bookkeeper(bookkeeper_id: int):
+    result = crud.read_bookkeeper(db, bookkeeper_id)
+    if result:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {bookkeeper_id}"
+    )
+
 # @app.get("/bookkeepers/search", response_model = BookkeeperSearchResult)
 # async def search_bookkeepers(keyword: str | None = None, limit: int = 20) -> list[dict]:
 #     print(keyword)
