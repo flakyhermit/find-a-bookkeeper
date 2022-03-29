@@ -26,7 +26,7 @@ async def read_bookkeepers(skip: int = 0, limit: int = 20, search: str = None):
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = schemas.Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int):
-    result = crud.get_bookkeeper_by_id(db, bookkeeper_id)
+    result = crud.bookkeeper.get(db, bookkeeper_id)
     if result:
         return result
     raise HTTPException(
@@ -36,11 +36,11 @@ async def read_bookkeeper(bookkeeper_id: int):
 
 @app.post("/bookkeepers/")
 async def create_bookkeeper(bookkeeper_in: schemas.BookkeeperCreate):
-    return crud.create_bookkeeper(db, bookkeeper_in)
+    return crud.bookkeeper.create(db, bookkeeper_in)
 
 @app.delete("/bookkeepers/{bookkeeper_id}")
 async def delete_bookkeeper(bookkeeper_id: int):
-    result = crud.delete_bookkeeper(db, bookkeeper_id)
+    result = crud.bookkeeper.delete(db, bookkeeper_id)
     if result is not None:
         return result
     raise HTTPException(
@@ -50,7 +50,7 @@ async def delete_bookkeeper(bookkeeper_id: int):
 
 @app.put("/bookkeepers/{bookkeeper_id}")
 async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.BookkeeperCreate):
-    result = crud.update_bookkeeper(db, bookkeeper_id, bookkeeper_in)
+    result = crud.bookkeeper.update(db, bookkeeper_id, bookkeeper_in)
     if result is not None:
         return result
     raise HTTPException(
