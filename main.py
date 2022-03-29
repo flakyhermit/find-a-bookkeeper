@@ -41,7 +41,7 @@ async def create_bookkeeper(bookkeeper_in: schema.BookkeeperCreate):
 @app.delete("/bookkeepers/{bookkeeper_id}")
 async def delete_bookkeeper(bookkeeper_id: int):
     result = crud.delete_bookkeeper(db, bookkeeper_id)
-    if result:
+    if result is not None:
         return result
     raise HTTPException(
         status_code = 404,
@@ -51,7 +51,7 @@ async def delete_bookkeeper(bookkeeper_id: int):
 @app.put("/bookkeepers/{bookkeeper_id}")
 async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schema.BookkeeperCreate):
     result = crud.update_bookkeeper(db, bookkeeper_id, bookkeeper_in)
-    if result:
+    if result is not None:
         return result
     raise HTTPException(
         status_code = 404,

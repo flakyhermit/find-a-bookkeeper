@@ -30,8 +30,7 @@ def delete_bookkeeper(db: Session, id: int):
     if bookkeeper is not None:
         db.delete(bookkeeper)
         db.commit()
-        return bookkeeper
-    return False
+    return bookkeeper
 
 def update_bookkeeper(db: Session, id: int, item: schema.BookkeeperCreate):
     bookkeeper = db.query(models.Bookkeeper).get(id)
@@ -40,5 +39,4 @@ def update_bookkeeper(db: Session, id: int, item: schema.BookkeeperCreate):
         bookkeeper.bio = item.bio
         db.commit()
         db.refresh(bookkeeper)
-        return bookkeeper
-    return False
+    return bookkeeper
