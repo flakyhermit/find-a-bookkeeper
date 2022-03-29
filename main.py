@@ -15,13 +15,16 @@ async def read_root():
     return { "title": "Find a Bookkeeper API", "message": "Welcome to find a bookkeeper API. Check the docs for info." }
 
 @app.get("/bookkeepers", response_model = list[schema.Bookkeeper])
-async def read_bookkeepers(skip: int = 0, limit: int = 20):
-    bookkeepers = crud.read_bookkeepers(db, skip, limit)
+async def read_bookkeepers(skip: int = 0, limit: int = 20, search: str = None):
+    if search is not None:
+        bookkeepers = crud.search_bookkeepers_by_name(db, search, skip, limit)
+    else:
+        bookkeepers = crud.get_bookkeepers(db, skip, limit)
     return bookkeepers
 
 @app.get("/bookkeepers/{bookkeeper_id}", response_model = schema.Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int):
-    result = crud.read_bookkeeper(db, bookkeeper_id)
+    result = crud.get_bookkeeper_by_id(db, bookkeeper_id)
     if result:
         return result
     raise HTTPException(
