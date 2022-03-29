@@ -49,7 +49,7 @@ async def delete_bookkeeper(bookkeeper_id: int):
     )
 
 @app.put("/bookkeepers/{bookkeeper_id}")
-async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.BookkeeperCreate):
+async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.BookkeeperUpdate):
     result = crud.bookkeeper.update(db, bookkeeper_id, bookkeeper_in)
     if result is not None:
         return result

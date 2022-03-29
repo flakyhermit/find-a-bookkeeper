@@ -14,6 +14,10 @@ class Bookkeeper(BookkeeperBase):
 class BookkeeperCreate(BookkeeperBase):
     pass
 
+class BookkeeperUpdate(BookkeeperBase):
+    name: str | None = None
+    bio: str | None = None
+
 class ServiceBase(BaseModel):
     name: str
 

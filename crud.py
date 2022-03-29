@@ -11,12 +11,12 @@ import models
 import schemas
 
 ModelType = TypeVar("ModelType", bound=Base)
-SchemaType = TypeVar("SchemaType", bound=BaseModel)
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
-class CRUDBase(Generic[ModelType, SchemaType]):
-    def __init__(self, model: ModelType, schema: SchemaType):
+class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+    def __init__(self, model: ModelType):
         self.model = model
-        self.schema = schema
 
     def get_all(self, db: Session, skip: int, limit: int):
         return db.query(self.model).offset(skip).limit(limit).all()
@@ -25,7 +25,7 @@ class CRUDBase(Generic[ModelType, SchemaType]):
         result = db.query(self.model).filter(self.model.id == id).first()
         return result
 
-    def create(self, db: Session, item: SchemaType):
+    def create(self, db: Session, item: CreateSchemaType):
         res = self.model(name = item.name, bio = item.bio)
         db.add(res)
         db.commit()
@@ -39,20 +39,21 @@ class CRUDBase(Generic[ModelType, SchemaType]):
             db.commit()
         return res
 
-    def update(self, db: Session, id: int, item: SchemaType):
+    def update(self, db: Session, id: int, item: UpdateSchemaType):
         res = db.query(self.model).get(id)
         if res is not None:
-            res.name = item.name
-            res.bio = item.bio
+            for key, value in item.dict().items():
+                if value is not None:
+                    setattr(res, key, value)
             db.commit()
             db.refresh(res)
         return res
 
-class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate]):
+class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schemas.BookkeeperUpdate]):
     def get_by_name(self, db: Session, search: str, skip: int, limit: int):
         result = db.query(self.model).filter(
             self.model.name.like(f'%{search}%')
         ).offset(skip).limit(limit).all()
         return result
 
-bookkeeper = CRUDBookkeeper(models.Bookkeeper, schemas.BookkeeperCreate)
+bookkeeper = CRUDBookkeeper(models.Bookkeeper)
