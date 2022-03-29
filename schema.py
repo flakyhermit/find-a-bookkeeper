@@ -2,29 +2,25 @@
 
 from pydantic import BaseModel
 
-# TODO Clean schemas: prooper class inheritance
-class Bookkeeper(BaseModel):
-    """ The model for a bookkeeper """
-    id: int
+class BookkeeperBase(BaseModel):
     name: str
     bio: str
+
+class Bookkeeper(BookkeeperBase):
+    id: int
     class Config:
         orm_mode = True
 
-class BookkeeperSearchResult(BaseModel):
-    results: list[Bookkeeper]
+class BookkeeperCreate(BookkeeperBase):
+    pass
 
-class BookkeeperCreate(BaseModel):
+class ServiceBase(BaseModel):
     name: str
-    bio: str
 
-class Service(BaseModel):
-    """ The model for a service """
+class Service(ServiceBase):
     id: int
-    name: str
+    class Config:
+        orm_mode = True
 
-class ServicesSearchResult(BaseModel):
-    results: list[Service]
-
-class ServiceCreate(BaseModel):
-    name: str
+class ServiceCreate(ServiceBase):
+    pass
