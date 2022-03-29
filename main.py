@@ -3,7 +3,7 @@
 from fastapi import FastAPI, HTTPException
 
 from db import SessionLocal
-import schema
+import schemas
 import crud
 
 app = FastAPI(title="Find a bookkeeper API")
@@ -17,14 +17,14 @@ async def read_root():
         "message": "Welcome to find a bookkeeper API. Check the docs for info."
     }
 
-@app.get("/bookkeepers", response_model = list[schema.Bookkeeper])
+@app.get("/bookkeepers", response_model = list[schemas.Bookkeeper])
 async def read_bookkeepers(skip: int = 0, limit: int = 20, search: str = None):
     if search is not None:
         bookkeepers = crud.search_bookkeepers_by_name(db, search, skip, limit)
         return bookkeepers
     return crud.get_bookkeepers(db, skip, limit)
 
-@app.get("/bookkeepers/{bookkeeper_id}", response_model = schema.Bookkeeper)
+@app.get("/bookkeepers/{bookkeeper_id}", response_model = schemas.Bookkeeper)
 async def read_bookkeeper(bookkeeper_id: int):
     result = crud.get_bookkeeper_by_id(db, bookkeeper_id)
     if result:
@@ -35,7 +35,7 @@ async def read_bookkeeper(bookkeeper_id: int):
     )
 
 @app.post("/bookkeepers/")
-async def create_bookkeeper(bookkeeper_in: schema.BookkeeperCreate):
+async def create_bookkeeper(bookkeeper_in: schemas.BookkeeperCreate):
     return crud.create_bookkeeper(db, bookkeeper_in)
 
 @app.delete("/bookkeepers/{bookkeeper_id}")
@@ -49,7 +49,7 @@ async def delete_bookkeeper(bookkeeper_id: int):
     )
 
 @app.put("/bookkeepers/{bookkeeper_id}")
-async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schema.BookkeeperCreate):
+async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.BookkeeperCreate):
     result = crud.update_bookkeeper(db, bookkeeper_id, bookkeeper_in)
     if result is not None:
         return result

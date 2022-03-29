@@ -4,15 +4,14 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from db import Base
-from pydantic import BaseModel
 
 import models
-import schema
+import schemas
 
 class CRUDBase():
-    def __init__(self, model: Base, schema_: BaseModel):
+    def __init__(self, model: Base, schema: BaseModel):
         self.model = model
-        self.schema_ = schema
+        self.schema = schema
 
     def get_all(self, db: Session, skip: int, limit: int):
         return db.query(self.model).offset(skip).limit(limit).all()
@@ -57,7 +56,7 @@ def search_bookkeepers_by_name(db: Session, search: str, skip: int, limit: int):
     ).offset(skip).limit(limit).all()
     return result
 
-def create_bookkeeper(db: Session, item: schema.BookkeeperCreate):
+def create_bookkeeper(db: Session, item: schemas.BookkeeperCreate):
     bookkeeper = models.Bookkeeper(name = item.name, bio = item.bio)
     db.add(bookkeeper)
     db.commit()
@@ -71,7 +70,7 @@ def delete_bookkeeper(db: Session, id: int):
         db.commit()
     return bookkeeper
 
-def update_bookkeeper(db: Session, id: int, item: schema.BookkeeperCreate):
+def update_bookkeeper(db: Session, id: int, item: schemas.BookkeeperCreate):
     bookkeeper = db.query(models.Bookkeeper).get(id)
     if bookkeeper is not None:
         bookkeeper.name = item.name
