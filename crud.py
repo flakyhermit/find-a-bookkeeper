@@ -2,8 +2,21 @@
 
 from sqlalchemy.orm import Session
 
+from db import Base
+from pydantic import BaseModel
+
 import models
 import schema
+
+class CRUDBase():
+    def __init__(self, model: Base, schema_: BaseModel):
+        self.model = model
+        self.schema_ = schema
+
+    def get():
+        pass
+    def set():
+        pass
 
 def get_bookkeepers(db: Session, skip: int, limit: int):
     return db.query(models.Bookkeeper).offset(skip).limit(limit).all()
