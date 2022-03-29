@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
 from db import Base
 from pydantic import BaseModel
@@ -13,10 +14,35 @@ class CRUDBase():
         self.model = model
         self.schema_ = schema
 
-    def get():
-        pass
-    def set():
-        pass
+    def get_all(self, db: Session, skip: int, limit: int):
+        return db.query(self.model).offset(skip).limit(limit).all()
+
+    def get(self, db: Session, id: int):
+        result = db.query(self.model).filter(self.model.id == id).first()
+        return result
+
+    def create(self, db: Session, item: BaseModel):
+        res = self.model(name = item.name, bio = item.bio)
+        db.add(res)
+        db.commit()
+        db.refresh(res)
+        return res
+
+    def delete(self, db: Session, id: int):
+        res = db.query(self.model).get(id)
+        if res is not None:
+            db.delete(res)
+            db.commit()
+        return res
+
+    def update(self, db: Session, id: int, item: BaseModel):
+        res = db.query(self.model).get(id)
+        if res is not None:
+            res.name = item.name
+            res.bio = item.bio
+            db.commit()
+            db.refresh(res)
+        return res
 
 def get_bookkeepers(db: Session, skip: int, limit: int):
     return db.query(models.Bookkeeper).offset(skip).limit(limit).all()
