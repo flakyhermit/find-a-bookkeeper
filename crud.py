@@ -26,7 +26,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return result
 
     def create(self, db: Session, item: CreateSchemaType):
-        res = self.model(name = item.name, bio = item.bio)
+        res = self.model(**item.dict())
         db.add(res)
         db.commit()
         db.refresh(res)
