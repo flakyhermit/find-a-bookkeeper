@@ -54,6 +54,17 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
             self.model.name.like(f'%{search}%')
         ).offset(skip).limit(limit).all()
         return result
+    def get_services(self, db: Session, id: int):
+        result = db.query(self.model.services).all()
+        print(result)
+        return result
+    def add_service(self, db: Session, id: int, service_id: int):
+        bookkeeper_obj = db.query(self.model).get(id)
+        service_obj = db.query(models.Service).get(service_id)
+        bookkeeper_obj.services.append(service_obj)
+        db.commit()
+        db.refresh(bookkeeper_obj)
+        return bookkeeper_obj
 
 class CRUDService(CRUDBase[models.Service, schemas.ServiceCreate, schemas.ServiceUpdate]):
     pass

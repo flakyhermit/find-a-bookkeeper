@@ -2,9 +2,12 @@
 
 from fastapi import FastAPI, HTTPException, APIRouter
 
-from db import SessionLocal
+from db import SessionLocal, engine
 import schemas
+import models
 import crud
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Find a bookkeeper API")
 db = SessionLocal()
@@ -58,6 +61,34 @@ async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.Bookkeepe
         status_code = 404,
         detail = f"there's no item with id: {bookkeeper_id}"
     )
+
+@app.get("/bookkeepers/{bookkeeper_id}/services", response_model = list[schemas.Service])
+async def read_bookkeeper(bookkeeper_id: int):
+    result = crud.bookkeeper.get_services(db, bookkeeper_id)
+    if result:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {bookkeeper_id}"
+    )
+
+@app.post("/bookkeepers/{bookkeeper_id}/services/{service_id}", response_model = schemas.Bookkeeper)
+async def add_service(bookkeeper_id: int, service_id: int):
+    # check if service id is there in db
+    result = crud.service.get(db, service_id)
+    if result is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = f"There's no service with id: {bookkeeper_id}"
+        )
+    result = crud.bookkeeper.get(db, bookkeeper_id)
+    if result is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = f"There's no bookkeeper with id: {service_id}"
+        )
+    result = crud.bookkeeper.add_service(db, bookkeeper_id, service_id)
+    return crud.bookkeeper.get(db, bookkeeper_id)
 
 @router.get("/", response_model=list[schemas.Service])
 async def read_services(skip: int = 0, limit: int = 20):
