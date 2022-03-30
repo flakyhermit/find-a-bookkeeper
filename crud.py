@@ -55,9 +55,12 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
         ).offset(skip).limit(limit).all()
         return result
     def get_services(self, db: Session, id: int):
-        result = db.query(self.model.services).all()
-        print(result)
-        return result
+        bookkeeper = db.query(self.model).get(id)
+        if bookkeeper is not None:
+            services = [i.name for i in bookkeeper.services]
+            return services
+        return None
+
     def add_service(self, db: Session, id: int, service_id: int):
         bookkeeper_obj = db.query(self.model).get(id)
         service_obj = db.query(models.Service).get(service_id)

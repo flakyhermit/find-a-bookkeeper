@@ -62,10 +62,10 @@ async def update_bookkeeper(bookkeeper_id: int, bookkeeper_in: schemas.Bookkeepe
         detail = f"there's no item with id: {bookkeeper_id}"
     )
 
-@app.get("/bookkeepers/{bookkeeper_id}/services", response_model = list[schemas.Service])
+@app.get("/bookkeepers/{bookkeeper_id}/services", response_model = list[str])
 async def read_bookkeeper(bookkeeper_id: int):
     result = crud.bookkeeper.get_services(db, bookkeeper_id)
-    if result:
+    if result is not None:
         return result
     raise HTTPException(
         status_code = 404,
