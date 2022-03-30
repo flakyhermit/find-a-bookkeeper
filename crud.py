@@ -42,9 +42,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def update(self, db: Session, id: int, item: UpdateSchemaType):
         res = db.query(self.model).get(id)
         if res is not None:
-            for key, value in item.dict().items():
-                if value is not None:
-                    setattr(res, key, value)
+            for key, value in item.dict(exclude_unset = True).items():
+                setattr(res, key, value)
             db.commit()
             db.refresh(res)
         return res
