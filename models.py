@@ -10,3 +10,10 @@ class Bookkeeper(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String(50))
     bio = Column(String(50))
+
+
+class Service(Base):
+    __tablename__ = "services"
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(50))

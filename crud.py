@@ -55,4 +55,8 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
         ).offset(skip).limit(limit).all()
         return result
 
+class CRUDService(CRUDBase[models.Service, schemas.ServiceCreate, schemas.ServiceUpdate]):
+    pass
+
 bookkeeper = CRUDBookkeeper(models.Bookkeeper)
+service = CRUDService(models.Service)

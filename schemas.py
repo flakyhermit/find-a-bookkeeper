@@ -28,3 +28,6 @@ class Service(ServiceBase):
 
 class ServiceCreate(ServiceBase):
     pass
+
+class ServiceUpdate(ServiceBase):
+    pass
