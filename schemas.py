@@ -33,16 +33,18 @@ class LocationUpdate(LocationBase):
 class BookkeeperBase(BaseModel):
     name: str
     bio: str
-    services: list[Service]
 
 class Bookkeeper(BookkeeperBase):
     id: int
+    location: Location
     class Config:
         orm_mode = True
 
 class BookkeeperCreate(BookkeeperBase):
+    location_id: int
     pass
 
 class BookkeeperUpdate(BookkeeperBase):
     name: str | None = None
     bio: str | None = None
+    location_id: int | None = None
