@@ -90,6 +90,7 @@ async def add_service(bookkeeper_id: int, service_id: int):
     result = crud.bookkeeper.add_service(db, bookkeeper_id, service_id)
     return crud.bookkeeper.get(db, bookkeeper_id)
 
+# Resources
 @router.get("/")
 def read_resources():
     return {
@@ -133,6 +134,46 @@ async def delete_service(service_id: int):
     raise HTTPException(
         status_code = 404,
         detail = f"There's no item with id: {service_id}"
+    )
+
+# Location
+@router.get("/locations", response_model=list[schemas.Location])
+async def read_locations(skip: int = 0, limit: int = 20):
+    result = crud.location.get_all(db, skip, limit)
+    return result
+
+@router.post("/locations", response_model = schemas.Location)
+async def create_location(location_in: schemas.LocationCreate):
+    return crud.location.create(db, location_in)
+
+@router.get("/locations/{location_id}", response_model = schemas.Location)
+async def read_location(location_id: int):
+    result = crud.location.get(db, location_id)
+    if result:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {location_id}"
+    )
+
+@router.put("/locations/{location_id}", response_model = schemas.Location)
+async def update_location(location_id: int, location_in: schemas.LocationUpdate):
+    result = crud.location.update(db, location_id, location_in)
+    if result is not None:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"there's no item with id: {location_id}"
+    )
+
+@router.delete("/locations/{location_id}")
+async def delete_location(location_id: int):
+    result = crud.location.delete(db, location_id)
+    if result is not None:
+        return result
+    raise HTTPException(
+        status_code = 404,
+        detail = f"There's no item with id: {location_id}"
     )
 
 app.include_router(router)

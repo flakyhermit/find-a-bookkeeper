@@ -16,6 +16,20 @@ class ServiceCreate(ServiceBase):
 class ServiceUpdate(ServiceBase):
     pass
 
+class LocationBase(BaseModel):
+    name: str
+
+class Location(LocationBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class LocationCreate(LocationBase):
+    pass
+
+class LocationUpdate(LocationBase):
+    pass
+
 class BookkeeperBase(BaseModel):
     name: str
     bio: str

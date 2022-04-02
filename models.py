@@ -24,6 +24,13 @@ class Bookkeeper(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String(50))
     bio = Column(String(50))
+    location = Column(Integer, ForeignKey("locations.id"))
 
     services = relationship("Service", secondary = service_bookkeeper_association_table,
                             order_by=Service.id)
+
+class Location(Base):
+    __tablename__ = "locations"
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(50))

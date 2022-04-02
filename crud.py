@@ -73,5 +73,9 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
 class CRUDService(CRUDBase[models.Service, schemas.ServiceCreate, schemas.ServiceUpdate]):
     pass
 
+class CRUDLocation(CRUDBase[models.Location, schemas.LocationCreate, schemas.LocationUpdate]):
+    pass
+
 bookkeeper = CRUDBookkeeper(models.Bookkeeper)
 service = CRUDService(models.Service)
+location = CRUDBase(models.Location)
