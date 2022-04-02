@@ -11,7 +11,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Find a bookkeeper API")
 db = SessionLocal()
-router = APIRouter(prefix="/services", tags=['services'])
+router = APIRouter(prefix="/values", tags=['values'])
 
 # Bookkeepers
 @app.get("/")
@@ -90,16 +90,22 @@ async def add_service(bookkeeper_id: int, service_id: int):
     result = crud.bookkeeper.add_service(db, bookkeeper_id, service_id)
     return crud.bookkeeper.get(db, bookkeeper_id)
 
-@router.get("/", response_model=list[schemas.Service])
+@router.get("/")
+def read_resources():
+    return {
+        "message": "Query for resources: possible values for services and locations"
+    }
+
+@router.get("/services", response_model=list[schemas.Service])
 async def read_services(skip: int = 0, limit: int = 20):
     result = crud.service.get_all(db, skip, limit)
     return result
 
-@router.post("/", response_model = schemas.Service)
+@router.post("/services", response_model = schemas.Service)
 async def create_service(service_in: schemas.ServiceCreate):
     return crud.service.create(db, service_in)
 
-@router.get("/{service_id}", response_model = schemas.Service)
+@router.get("/services/{service_id}", response_model = schemas.Service)
 async def read_service(service_id: int):
     result = crud.service.get(db, service_id)
     if result:
@@ -109,7 +115,7 @@ async def read_service(service_id: int):
         detail = f"There's no item with id: {service_id}"
     )
 
-@router.put("/{service_id}", response_model = schemas.Service)
+@router.put("/services/{service_id}", response_model = schemas.Service)
 async def update_service(service_id: int, service_in: schemas.ServiceUpdate):
     result = crud.service.update(db, service_id, service_in)
     if result is not None:
@@ -119,7 +125,7 @@ async def update_service(service_id: int, service_in: schemas.ServiceUpdate):
         detail = f"there's no item with id: {service_id}"
     )
 
-@router.delete("/{service_id}")
+@router.delete("/services/{service_id}")
 async def delete_service(service_id: int):
     result = crud.service.delete(db, service_id)
     if result is not None:
