@@ -37,6 +37,8 @@ class BookkeeperBase(BaseModel):
 class Bookkeeper(BookkeeperBase):
     id: int
     location: Location
+    services: list[Service]
+
     class Config:
         orm_mode = True
 
