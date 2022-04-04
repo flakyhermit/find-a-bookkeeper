@@ -44,6 +44,7 @@ class Bookkeeper(BookkeeperBase):
 
 class BookkeeperCreate(BookkeeperBase):
     location_id: int
+    service_ids: list[int] | None = None
     pass
 
 class BookkeeperUpdate(BookkeeperBase):

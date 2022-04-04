@@ -25,8 +25,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         result = db.query(self.model).filter(self.model.id == id).first()
         return result
 
-    def create(self, db: Session, item: CreateSchemaType):
-        res = self.model(**item.dict())
+    def create(self, db: Session, item: CreateSchemaType | dict[CreateSchemaType]):
+        if not isinstance(item, dict):
+            dict_in = item.dict()
+        else:
+            dict_in = item
+        print(dict_in)
+        res = self.model(**dict_in)
         db.add(res)
         db.commit()
         db.refresh(res)
@@ -54,6 +59,20 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
             self.model.name.like(f'%{search}%')
         ).offset(skip).limit(limit).all()
         return result
+
+    def create(self, db: Session, bookkeeper_in: schemas.BookkeeperCreate):
+        obj_in_dict = bookkeeper_in.dict(exclude_unset = True)
+        print(obj_in_dict)
+        service_ids = []
+        if "service_ids" in obj_in_dict.keys():
+            service_ids = obj_in_dict["service_ids"]
+            del obj_in_dict["service_ids"]
+        new_bookkeeper = super().create(db, obj_in_dict)
+        if service_ids != 0:
+            for service_id in service_ids:
+                new_bookkeeper = self.add_service(db, new_bookkeeper.id, service_id)
+        return new_bookkeeper
+
 
     def get_services(self, db: Session, id: int):
         bookkeeper_obj = db.query(self.model).get(id)
