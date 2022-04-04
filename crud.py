@@ -83,11 +83,12 @@ class CRUDBookkeeper(CRUDBase[models.Bookkeeper, schemas.BookkeeperCreate, schem
     def add_service(self, db: Session, id: int, service_id: int):
         bookkeeper_obj = db.query(self.model).get(id)
         service_obj = db.query(models.Service).get(service_id)
-        if service_id not in bookkeeper_obj.services:
+        if service_obj not in bookkeeper_obj.services:
             bookkeeper_obj.services.append(service_obj)
             db.commit()
             db.refresh(bookkeeper_obj)
-        return bookkeeper_obj
+            return bookkeeper_obj
+        return False
 
     def delete_service(self, db: Session, id: int, service_id: int):
         bookkeeper_obj = db.query(self.model).get(id)
