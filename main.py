@@ -96,6 +96,28 @@ async def add_service(bookkeeper_id: int, service_id: int, db = Depends(get_db))
     result = crud.bookkeeper.add_service(db, bookkeeper_id, service_id)
     return crud.bookkeeper.get(db, bookkeeper_id)
 
+@app.delete("/bookkeepers/{bookkeeper_id}/services/{service_id}", response_model = schemas.Bookkeeper)
+def delete_service(bookkeeper_id: int, service_id: int, db = Depends(get_db)):
+    result = crud.service.get(db, service_id)
+    if result is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = f"There's no service with id: {service_id}"
+        )
+    result = crud.bookkeeper.get(db, bookkeeper_id)
+    if result is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = f"There's no bookkeeper with id: {bookkeeper_id}"
+        )
+    result = crud.bookkeeper.delete_service(db, bookkeeper_id, service_id)
+    if result is False:
+        raise HTTPException(
+            status_code = 409,
+            detail = f"Service (id: {service_id}) is not present on the Bookkeeper (id: {bookkeeper_id})"
+        )
+    return result
+
 # Resources
 @router.get("/")
 def read_resources():
