@@ -44,7 +44,7 @@ async def read_bookkeeper(bookkeeper_id: int, db = Depends(get_db)):
         detail = f"There's no item with id: {bookkeeper_id}"
     )
 
-@app.post("/bookkeepers/")
+@app.post("/bookkeepers/", response_model = schemas.Bookkeeper)
 async def create_bookkeeper(bookkeeper_in: schemas.BookkeeperCreate, db = Depends(get_db)):
     return crud.bookkeeper.create(db, bookkeeper_in)
 
