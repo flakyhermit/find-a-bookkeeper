@@ -163,6 +163,11 @@ async def update_service(service_id: int, service_in: schemas.ServiceUpdate, db 
 @router.delete("/services/{service_id}")
 async def delete_service(service_id: int, db = Depends(get_db)):
     result = crud.service.delete(db, service_id)
+    if result is False:
+        raise HTTPException(
+            status_code = 202,
+            detail = f"Bookkkeepers have this service on. correct them first"
+        )
     if result is not None:
         return result
     raise HTTPException(
