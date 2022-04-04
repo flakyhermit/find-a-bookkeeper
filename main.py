@@ -203,6 +203,11 @@ async def update_location(location_id: int, location_in: schemas.LocationUpdate,
 @router.delete("/locations/{location_id}")
 async def delete_location(location_id: int, db = Depends(get_db)):
     result = crud.location.delete(db, location_id)
+    if result is False:
+        raise HTTPException(
+            status_code = 202,
+            detail = f"Bookkkeepers have this location on. correct them first"
+        )
     if result is not None:
         return result
     raise HTTPException(

@@ -106,8 +106,15 @@ class CRUDService(CRUDBase[models.Service, schemas.ServiceCreate, schemas.Servic
     pass
 
 class CRUDLocation(CRUDBase[models.Location, schemas.LocationCreate, schemas.LocationUpdate]):
-    pass
+    def delete(self, db: Session, id: int):
+        bookkeepers = db.query(models.Bookkeeper).all()
+        locations = [obj.location_id for obj in bookkeepers]
+        print(locations)
+        if id not in locations:
+            result = super().delete(db, id)
+            return result
+        return False
 
 bookkeeper = CRUDBookkeeper(models.Bookkeeper)
 service = CRUDService(models.Service)
-location = CRUDBase(models.Location)
+location = CRUDLocation(models.Location)
